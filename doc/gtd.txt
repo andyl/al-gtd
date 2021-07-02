@@ -1,0 +1,161 @@
+GETTING THINGS DONE IN VIM                                            *gtd* *vgtd*
+==============================================================================
+CONTENTS                                                           *gtd-outline*
+
+  Introduction       |gtd-intro|
+  Fields             |gtd-fields|
+  Groups             |gtd-groups|
+  Editing            |gtd-editing|
+  Sorting            |gtd-sorting|
+  Grouping           |gtd-grouping|
+  Notes              |gtd-notes|
+  File Layout        |gtd-files|
+  Archive            |gtd-archive|
+  Support Software   |gtd-support|
+  Related Tools      |gtd-tools|
+
+==============================================================================
+INTRODUCTION                                                         *gtd-intro*
+
+VGTD is a simple task-tracking app.  There are many task trackers:
+vim-orgmode, taskwarrior, vitalist, and more.  This tracker saves data in
+plain-text files, editable in Vim, one file per project.
+
+==============================================================================
+FIELDS                                                              *gtd-fields*
+
+Each task is on a single line.  Each task has a standard set of fields
+delimited by a unique character:
+
++------+----------+-------------------------------------+
+| Char | Element  | Description                         |
++------+----------+-------------------------------------+
+| !    | Handle   | a generated UUID-style task ID      |
+| =    | Status   | task status (inbox, completed)      |
+| :    | Scope    | the task scope                      |
+| @    | Context  | the context for completing the task |
+| -    | Priority | task priority (H, M or L)           |
+| +    | Title    | task title                          |
+| *    | Note     | indicates presence of a task note   |
+| ^    | Append   | append text to the task note        |
+| ~    | Date     | completion date                     |
+| #    | Contact  | contact name (also use for event)   |
++------+----------+-------------------------------------+
+
++--------------------------------+-------------------+
+| Valid Status                   | Valid Priorities  |
++--------------------------------+-------------------+
+| =I : Inbox                     | -H : High         |
+| =A : Active (next action)      | -M : Medium       |
+| =W : Waiting on contact        | -L : Low          |
+| =C : Calendar (time triggered) |                   |
+| =S : Someday / Maybe           |                   |
+| =X : Done                      |                   |
++--------------------------------+-------------------+
+
+==============================================================================
+GROUPS                                                              *gtd-groups*
+
+Tasks are organized into groups, by category, project, context, etc.:
+
+Groups are indicated by a group header, in the format: `{=I}`
+
+For example: 
+- `{=I}`   : group by box
+- `{:h}`   : group by project
+- `{@err}` : group by context 
+
+==============================================================================
+EDITING                                                            *gtd-editing*
+
+You can edit anything directly - it's just text.  Put fields anywhere on a
+row. Fields will be parsed and reformatted automatically.
+
+There are also editing commands, to speed up your work.  Editing Commands work
+on the current row.  In visual mode, all selected rows are affected.
+
+- <leader>c=    change the category (interactive)
+- <leader>c:    change the project  (interactive)
+- <leader>c-    change the priority (interactive)
+- <leader>c@    change the context  (interactive)
+- <leader>c~    change the date     (interactive)
+- <leader>c#    change the contact  (interactive)
+
+- <leader>x  change the category to 'X' 
+- <leader>a  change the category to 'A' 
+- <leader>h  change the priority to 'H' 
+- <leader>m  change the priority to 'M' 
+- <leader>l  change the priority to 'L' 
+
+Special editing tips:
+- use Ruby statements for relative dates (eg ~2.weeks.from_now)
+- append note text using an caret (^Note Content Here)
+
+==============================================================================
+SORTING                                                            *gtd-sorting*
+
+- <leader>ss    reformat and resort the list
+
+- <leader>s=    reformat and sort by category
+- <leader>s:    reformat and sort by project
+- <leader>s@    reformat and sort by context
+- <leader>s-    reformat and sort by priority
+
+==============================================================================
+GROUPING                                                          *gtd-grouping*
+
+- <leader>g=    reformat and group by category
+- <leader>g:    reformat and group by project
+- <leader>g@    reformat and group by context
+- <leader>g-    reformat and group by priority
+
+
+==============================================================================
+TASK NOTES                                                           *gtd-notes*
+
+Tasks can have associated notes.
+
+- <leader>n    open the associated task note
+
+Append text to the task note:
+- Enter a caret followed by text (^Note content here)
+- Save the file
+- reformat and resort (<leader>ss)
+- the text will be appended to the task note
+
+==============================================================================
+FILE STRUCTURE                                                       *gtd-files*
+
+gtd_root/
+- archive/
+-- notes/
+--- 4arZ.md
+--- 3J4a.md
+-- base_yymmdd.gta
+-- project_yymmdd.gta
+- notes/
+-- 5tYo.md
+-- 3W98.md
+- base.gtd
+- base.gta
+- project.gtd
+- project.gta
+
+==============================================================================
+ARCHIVE                                                            *gtd-archive*
+
+When the file is saved, all DONE topics `{=X}` are moved to the archive file
+`<project>.gta`.
+
+==============================================================================
+SUPPORT SOFTWARE                                                   *gtd-support*
+
+This editing mode relies on a ruby gem `vgtd` which has a set of executable
+scripts (`pgsort`, `pggroup`, etc.) perform sorting and formatting and archiving.
+
+==============================================================================
+RELATED TOOLS                                                        *gtd-tools*
+
+  - pgcl - command line utility for adding tasks 
+
+" vim: ft=help tw=78 ts=2 et
